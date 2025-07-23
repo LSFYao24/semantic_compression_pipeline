@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+*.egg-info/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Data files (avoid uploading large files)
+data/raw/*.jpg
+data/raw/*.png
+data/raw/*.jpeg
+data/raw/*.bmp
+data/raw/*.tiff
+data/descriptions/*.json
+data/reconstructed/*
+data/results/*
+
+# Model files
+*.pt
+*.pth
+*.ckpt
+*.bin
+
+# API keys and private configs
+*.key
+*_private.yaml
+config_private.yaml
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Conda environment
+conda-meta/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
