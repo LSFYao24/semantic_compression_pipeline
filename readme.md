@@ -70,7 +70,7 @@ python main.py --image path/to/your/image.jpg
 
 - [x] Project setup and basic infrastructure
 - [x] Image loading and preprocessing
-- [ ] Image complexity analysis
+- [x] Image complexity analysis
 - [ ] VLM integration for text compression
 - [ ] Text complexity analysis
 - [ ] Image reconstruction pipeline
