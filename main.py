@@ -41,6 +41,25 @@ def test_image_loader():
         print(f"✗ Failed to import ImageLoader: {e}")
         return False
 
+
+def test_complexity_analyzer():
+    """Test the complexity analyzer module"""
+    try:
+        from complexity_analyzer import ComplexityAnalyzer
+
+        analyzer = ComplexityAnalyzer()
+        print("✓ ComplexityAnalyzer imported successfully")
+
+        # Test with synthetic image
+        test_image = np.random.randint(0, 255, (100, 100, 3), dtype=np.uint8)
+        results = analyzer.analyze_image(test_image, verbose=True)
+
+        print(f"✓ Analysis completed! Level: {results['complexity_level']}")
+        return True
+    except ImportError as e:
+        print(f"✗ Failed to import ComplexityAnalyzer: {e}")
+        return False
+
 def main():
     parser = argparse.ArgumentParser(description='Semantic Compression Pipeline')
     parser.add_argument('--setup', action='store_true', 
