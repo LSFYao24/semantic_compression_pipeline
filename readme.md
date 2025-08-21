@@ -71,7 +71,7 @@ python main.py --image path/to/your/image.jpg
 - [x] Project setup and basic infrastructure
 - [x] Image loading and preprocessing
 - [x] Image complexity analysis
-- [ ] VLM integration for text compression
+- [x] VLM integration for text compression
 - [ ] Text complexity analysis
 - [ ] Image reconstruction pipeline
 - [ ] Similarity evaluation metrics
