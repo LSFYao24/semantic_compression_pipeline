@@ -26,15 +26,15 @@ class PromptManager:
         self.prompt_templates = {
             'short': {
                 'system': "You are an expert at describing images concisely.",
-                'user': "Describe this image in one sentence."
+                'user': "Describe this image in one clear sentence."
             },
             'medium': {
                 'system': "You are an expert at describing images with moderate detail.",
-                'user': "Describe this image in 2-3 sentences including main objects, colors, and setting."
+                'user': "Describe this image in 2-3 sentences. Include the main objects, their colors, and the setting or background."
             },
             'detailed': {
                 'system': "You are an expert at describing images thoroughly for reconstruction.",
-                'user': "Describe this image in detail including objects, colors, textures, spatial relationships, lighting, and background. Make it suitable for text-to-image generation."
+                'user': "Describe this image in detail including all visible objects, their colors, positions, spatial relationships, lighting conditions, and background elements. Make the description comprehensive and suitable for text-to-image generation."
             }
         }
 
@@ -133,44 +133,40 @@ class BLIP2Client(VLMClient):
         Adapt general prompts to BLIP-2 Q&A format
         BLIP-2 works better with question-answer format
         """
-        prompt_mappings = {
-            "describe this image in one sentence": "Question: What is in this image? Answer:",
-            "describe this image in 2-3 sentences": "Question: Describe this image including objects, colors, and setting. Answer:",
-            "describe this image in detail": "Question: Provide a detailed description of this image including objects, colors, textures, spatial relationships, lighting, and background suitable for text-to-image generation. Answer:"
-        }
-        
-        # Check for key phrases and map to BLIP-2 style
         base_lower = base_prompt.lower()
-        for key, blip_prompt in prompt_mappings.items():
-            if key in base_lower:
-                return blip_prompt
         
-        # Default format
-        return f"Question: {base_prompt} Answer:"
+        if "one clear sentence" in base_lower:
+            return "Question: What do you see in this image in one sentence? Answer:"
+        elif "2-3 sentences" in base_lower:
+            return "Question: Describe this image in detail including objects, colors, and setting. Answer:"
+        elif "detail including all visible objects" in base_lower:
+            return "Question: Provide a comprehensive detailed description of this image including all objects, colors, positions, lighting, and background elements suitable for image generation. Answer:"
+        else:
+            return f"Question: {base_prompt} Answer:"
     
     def _get_generation_params(self, detail_level: str) -> dict:
         """Get generation parameters based on detail level"""
         params = {
             'short': {
-                'max_new_tokens': 32,
+                'max_new_tokens': 50,
                 'min_length': 10,
-                'num_beams': 1,
-                'do_sample': False,
-                'early_stopping': True
-            },
-            'medium': {
-                'max_new_tokens': 64,
-                'min_length': 20,
                 'num_beams': 3,
                 'do_sample': False,
-                'early_stopping': True
+                'repetition_penalty': 1.1
             },
-            'detailed': {
-                'max_new_tokens': 128,
-                'min_length': 40,
+            'medium': {
+                'max_new_tokens': 100,
+                'min_length': 30,
                 'num_beams': 5,
                 'do_sample': False,
-                'early_stopping': True
+                'repetition_penalty': 1.1
+            },
+            'detailed': {
+                'max_new_tokens': 200,
+                'min_length': 60,
+                'num_beams': 5,
+                'do_sample': False,
+                'repetition_penalty': 1.2
             }
         }
         return params.get(detail_level, params['medium'])
@@ -192,9 +188,9 @@ class BLIP2Client(VLMClient):
             # Determine detail level from prompt
             detail_level = 'medium'  # default
             user_prompt_lower = prompt['user'].lower()
-            if 'one sentence' in user_prompt_lower:
+            if 'one' in user_prompt_lower and 'sentence' in user_prompt_lower:
                 detail_level = 'short'
-            elif 'detail' in user_prompt_lower or 'thorough' in user_prompt_lower:
+            elif 'detail' in user_prompt_lower or 'comprehensive' in user_prompt_lower:
                 detail_level = 'detailed'
             
             # Adapt prompt for BLIP-2
@@ -265,7 +261,7 @@ class MockVLMClient(VLMClient):
         mean_brightness = np.mean(image)
         
         # Generate different descriptions based on prompt level
-        if 'one sentence' in prompt['user'].lower():
+        if 'one' in prompt['user'].lower() and 'sentence' in prompt['user'].lower():
             description = f"A {width}x{height} image with moderate brightness and various visual elements."
         elif '2-3 sentences' in prompt['user'].lower():
             description = f"This is a {width}x{height} pixel image with an average brightness of {mean_brightness:.1f}. The image contains various visual elements distributed across the frame. The overall composition appears to have a balanced visual structure."
