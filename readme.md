@@ -72,7 +72,7 @@ python main.py --image path/to/your/image.jpg
 - [x] Image loading and preprocessing
 - [x] Image complexity analysis
 - [x] VLM integration for text compression
-- [ ] Text complexity analysis
+- [x] Text complexity analysis
 - [ ] Image reconstruction pipeline
 - [ ] Similarity evaluation metrics
 - [ ] Results analysis and visualization
